@@ -1,0 +1,26 @@
+{
+    "compatibility_status": "Incompatible",
+    "total_conflicts": 2,
+    "summary": {
+        "Synchronization": 2,
+        "Consistency": 0,
+        "Reachability": 0,
+        "Deadlock": 0
+    },
+    "overall_verdict": "Compatibility verification identified one or more conflicts that prevent safe composition of the interacting smart contracts.",
+    "primary_root_cause": "The primary compatibility issue arises from workflow synchronization mismatches between the interacting contracts.",
+    "warnings": [],
+    "milestone_observations": [
+        "There exists an intermediate state 'InfoCheck' in FSM1 between ('Created', 'Initiated') and ('TemperatureChecked', 'StorageValidated').",
+        "There exists an intermediate state 'MedDetailsCheck' in FSM2 between ('Created', 'Initiated') and ('TemperatureChecked', 'StorageValidated').",
+        "There exists an intermediate state 'TransportInProgress' in FSM1 between ('TransportStarted', 'Shipping') and ('Delivered', 'Received').",
+        "There exists an intermediate state 'ShippingInProgress' in FSM2 between ('TransportStarted', 'Shipping') and ('Delivered', 'Received')."
+    ],
+    "recommendations": [
+        "Align workflow mappings and synchronization points between both contracts."
+    ],
+    "failed_rules": [
+        "SYNC_2",
+        "SYNC_3"
+    ]
+}

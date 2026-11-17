@@ -1,0 +1,71 @@
+{
+  "name": "WarehouseBeta",
+
+  "variables": {
+    "qualityRating": {
+      "type": "integer",
+      "domain": [0, 100]
+    },
+    "lotNumber": {
+      "type": "string"
+    },
+    "expirationDate": {
+      "type": "date"
+    }
+  },
+
+  "initial_state": "Initiated",
+
+  "states": [
+    "Initiated",
+    "InfoCheckMed",
+    "InspectionValidated",
+    "DispatchAuthorized",
+    "DispatchRejected",
+    "Shipping",
+    "Received"
+  ],
+
+  "transitions": [
+    {
+      "from": "Initiated",
+      "to": "InfoCheckMed"
+    },
+    {
+        "from": "InfoCheckMed",
+        "to": "InspectionValidated"
+    },
+
+    {
+      "from": "InspectionValidated",
+      "to": "DispatchAuthorized",
+
+      "guard": {
+        "variable": "qualityRating",
+        "operator": "greater_equal",
+        "value": 80
+      }
+    },
+
+    {
+      "from": "InspectionValidated",
+      "to": "DispatchRejected",
+
+      "guard": {
+        "variable": "qualityRating",
+        "operator": "less",
+        "value": 80
+      }
+    },
+
+    {
+      "from": "DispatchAuthorized",
+      "to": "Shipping"
+    },
+
+    {
+      "from": "Shipping",
+      "to": "Received"
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+    "initial_state": "('Created', 'Initiated')",
+    "states": [
+        "('QualityChecked', 'InspectionValidated')",
+        "('ShipmentRejected', 'DispatchRejected')",
+        "('Created', 'Initiated')",
+        "('TransportStarted', 'Shipping')",
+        "('ShipmentApproved', 'DispatchAuthorized')",
+        "('Delivered', 'Received')"
+    ],
+    "transitions": [
+        {
+            "id": "T1",
+            "from": "('Created', 'Initiated')",
+            "to": "('QualityChecked', 'InspectionValidated')",
+            "fsm1_transition": {
+                "from": "Created",
+                "to": "QualityChecked",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "Initiated",
+                "to": "InspectionValidated",
+                "guard": null
+            },
+            "fsm1_intermediate_states": [
+                "DetailsCheck"
+            ],
+            "fsm2_intermediate_states": [
+                "InfoCheckMed"
+            ]
+        },
+        {
+            "id": "T2",
+            "from": "('QualityChecked', 'InspectionValidated')",
+            "to": "('ShipmentApproved', 'DispatchAuthorized')",
+            "fsm1_transition": {
+                "from": "QualityChecked",
+                "to": "ShipmentApproved",
+                "guard": {
+                    "variable": "qualityScore",
+                    "operator": "greater_equal",
+                    "value": 85
+                }
+            },
+            "fsm2_transition": {
+                "from": "InspectionValidated",
+                "to": "DispatchAuthorized",
+                "guard": {
+                    "variable": "qualityRating",
+                    "operator": "greater_equal",
+                    "value": 80
+                }
+            },
+            "fsm1_intermediate_states": [],
+            "fsm2_intermediate_states": []
+        },
+        {
+            "id": "T3",
+            "from": "('QualityChecked', 'InspectionValidated')",
+            "to": "('ShipmentRejected', 'DispatchRejected')",
+            "fsm1_transition": {
+                "from": "QualityChecked",
+                "to": "ShipmentRejected",
+                "guard": {
+                    "variable": "qualityScore",
+                    "operator": "less",
+                    "value": 85
+                }
+            },
+            "fsm2_transition": {
+                "from": "InspectionValidated",
+                "to": "DispatchRejected",
+                "guard": {
+                    "variable": "qualityRating",
+                    "operator": "less",
+                    "value": 80
+                }
+            },
+            "fsm1_intermediate_states": [],
+            "fsm2_intermediate_states": []
+        },
+        {
+            "id": "T4",
+            "from": "('ShipmentApproved', 'DispatchAuthorized')",
+            "to": "('TransportStarted', 'Shipping')",
+            "fsm1_transition": {
+                "from": "ShipmentApproved",
+                "to": "TransportStarted",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "DispatchAuthorized",
+                "to": "Shipping",
+                "guard": null
+            },
+            "fsm1_intermediate_states": [],
+            "fsm2_intermediate_states": []
+        },
+        {
+            "id": "T5",
+            "from": "('TransportStarted', 'Shipping')",
+            "to": "('Delivered', 'Received')",
+            "fsm1_transition": {
+                "from": "TransportStarted",
+                "to": "Delivered",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "Shipping",
+                "to": "Received",
+                "guard": null
+            },
+            "fsm1_intermediate_states": [],
+            "fsm2_intermediate_states": []
+        }
+    ],
+    "variable_mapping": {
+        "variables": [
+            {
+                "fsm1_variable": "qualityScore",
+                "fsm2_variable": "qualityRating",
+                "type": "integer"
+            },
+            {
+                "fsm1_variable": "batchID",
+                "fsm2_variable": "lotNumber",
+                "type": "string"
+            },
+            {
+                "fsm1_variable": "expiryDate",
+                "fsm2_variable": "expirationDate",
+                "type": "date"
+            }
+        ]
+    },
+    "state_dictionary": {
+        "DistributorAlpha": {
+            "QualityChecked": [
+                "QualityChecked_InspectionValidated"
+            ],
+            "ShipmentRejected": [
+                "ShipmentRejected_DispatchRejected"
+            ],
+            "Created": [
+                "Created_Initiated"
+            ],
+            "TransportStarted": [
+                "TransportStarted_Shipping"
+            ],
+            "ShipmentApproved": [
+                "ShipmentApproved_DispatchAuthorized"
+            ],
+            "Delivered": [
+                "Delivered_Received"
+            ]
+        },
+        "WarehouseBeta": {
+            "InspectionValidated": [
+                "QualityChecked_InspectionValidated"
+            ],
+            "DispatchRejected": [
+                "ShipmentRejected_DispatchRejected"
+            ],
+            "Initiated": [
+                "Created_Initiated"
+            ],
+            "Shipping": [
+                "TransportStarted_Shipping"
+            ],
+            "DispatchAuthorized": [
+                "ShipmentApproved_DispatchAuthorized"
+            ],
+            "Received": [
+                "Delivered_Received"
+            ]
+        }
+    }
+}

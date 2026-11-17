@@ -1,0 +1,238 @@
+{
+    "workflow_analysis": [
+        {
+            "state": "('QualityChecked', 'InspectionValidated')",
+            "fsm1_state": "QualityChecked",
+            "fsm2_state": "InspectionValidated",
+            "incoming": 1,
+            "outgoing": 2,
+            "initial": false,
+            "terminal": false
+        },
+        {
+            "state": "('ShipmentRejected', 'DispatchRejected')",
+            "fsm1_state": "ShipmentRejected",
+            "fsm2_state": "DispatchRejected",
+            "incoming": 1,
+            "outgoing": 0,
+            "initial": false,
+            "terminal": true
+        },
+        {
+            "state": "('Created', 'Initiated')",
+            "fsm1_state": "Created",
+            "fsm2_state": "Initiated",
+            "incoming": 0,
+            "outgoing": 1,
+            "initial": true,
+            "terminal": false
+        },
+        {
+            "state": "('TransportStarted', 'Shipping')",
+            "fsm1_state": "TransportStarted",
+            "fsm2_state": "Shipping",
+            "incoming": 1,
+            "outgoing": 1,
+            "initial": false,
+            "terminal": false
+        },
+        {
+            "state": "('ShipmentApproved', 'DispatchAuthorized')",
+            "fsm1_state": "ShipmentApproved",
+            "fsm2_state": "DispatchAuthorized",
+            "incoming": 1,
+            "outgoing": 1,
+            "initial": false,
+            "terminal": false
+        },
+        {
+            "state": "('Delivered', 'Received')",
+            "fsm1_state": "Delivered",
+            "fsm2_state": "Received",
+            "incoming": 1,
+            "outgoing": 0,
+            "initial": false,
+            "terminal": true
+        }
+    ],
+    "transition_analysis": [
+        {
+            "transition_id": "T1",
+            "from": "('Created', 'Initiated')",
+            "to": "('QualityChecked', 'InspectionValidated')",
+            "fsm1_transition": {
+                "from": "Created",
+                "to": "QualityChecked",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "Initiated",
+                "to": "InspectionValidated",
+                "guard": null
+            },
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null,
+            "reason": "Neither transition has a decision guard."
+        },
+        {
+            "transition_id": "T2",
+            "from": "('QualityChecked', 'InspectionValidated')",
+            "to": "('ShipmentApproved', 'DispatchAuthorized')",
+            "fsm1_transition": {
+                "from": "QualityChecked",
+                "to": "ShipmentApproved",
+                "guard": {
+                    "variable": "qualityScore",
+                    "operator": "greater_equal",
+                    "value": 85
+                }
+            },
+            "fsm2_transition": {
+                "from": "InspectionValidated",
+                "to": "DispatchAuthorized",
+                "guard": {
+                    "variable": "qualityRating",
+                    "operator": "greater_equal",
+                    "value": 80
+                }
+            },
+            "transition_type": "decision",
+            "relationship": "compatible_with_merge",
+            "requires_merge": true,
+            "merged_guard": {
+                "variable": "qualityScore",
+                "operator": "greater_equal",
+                "value": 85
+            },
+            "reason": "Thresholds overlap."
+        },
+        {
+            "transition_id": "T3",
+            "from": "('QualityChecked', 'InspectionValidated')",
+            "to": "('ShipmentRejected', 'DispatchRejected')",
+            "fsm1_transition": {
+                "from": "QualityChecked",
+                "to": "ShipmentRejected",
+                "guard": {
+                    "variable": "qualityScore",
+                    "operator": "less",
+                    "value": 85
+                }
+            },
+            "fsm2_transition": {
+                "from": "InspectionValidated",
+                "to": "DispatchRejected",
+                "guard": {
+                    "variable": "qualityRating",
+                    "operator": "less",
+                    "value": 80
+                }
+            },
+            "transition_type": "decision",
+            "relationship": "compatible_with_merge",
+            "requires_merge": true,
+            "merged_guard": {
+                "variable": "qualityScore",
+                "operator": "less",
+                "value": 85
+            },
+            "reason": "Thresholds overlap."
+        },
+        {
+            "transition_id": "T4",
+            "from": "('ShipmentApproved', 'DispatchAuthorized')",
+            "to": "('TransportStarted', 'Shipping')",
+            "fsm1_transition": {
+                "from": "ShipmentApproved",
+                "to": "TransportStarted",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "DispatchAuthorized",
+                "to": "Shipping",
+                "guard": null
+            },
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null,
+            "reason": "Neither transition has a decision guard."
+        },
+        {
+            "transition_id": "T5",
+            "from": "('TransportStarted', 'Shipping')",
+            "to": "('Delivered', 'Received')",
+            "fsm1_transition": {
+                "from": "TransportStarted",
+                "to": "Delivered",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "Shipping",
+                "to": "Received",
+                "guard": null
+            },
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null,
+            "reason": "Neither transition has a decision guard."
+        }
+    ],
+    "milestone_observations": [
+        "There exists an intermediate state 'DetailsCheck' in FSM1 between ('Created', 'Initiated') and ('QualityChecked', 'InspectionValidated').",
+        "There exists an intermediate state 'InfoCheckMed' in FSM2 between ('Created', 'Initiated') and ('QualityChecked', 'InspectionValidated')."
+    ],
+    "synchronization_analysis": {
+        "total_transitions": 5,
+        "compatible_with_merge": 2,
+        "identical": 0,
+        "unconstrained": 3,
+        "incompatible": 0,
+        "unknown": 0,
+        "details": [
+            {
+                "from": "('Created', 'Initiated')",
+                "to": "('QualityChecked', 'InspectionValidated')",
+                "relationship": "unconstrained",
+                "reason": "Neither transition has a decision guard."
+            },
+            {
+                "from": "('QualityChecked', 'InspectionValidated')",
+                "to": "('ShipmentApproved', 'DispatchAuthorized')",
+                "relationship": "compatible_with_merge",
+                "reason": "Thresholds overlap."
+            },
+            {
+                "from": "('QualityChecked', 'InspectionValidated')",
+                "to": "('ShipmentRejected', 'DispatchRejected')",
+                "relationship": "compatible_with_merge",
+                "reason": "Thresholds overlap."
+            },
+            {
+                "from": "('ShipmentApproved', 'DispatchAuthorized')",
+                "to": "('TransportStarted', 'Shipping')",
+                "relationship": "unconstrained",
+                "reason": "Neither transition has a decision guard."
+            },
+            {
+                "from": "('TransportStarted', 'Shipping')",
+                "to": "('Delivered', 'Received')",
+                "relationship": "unconstrained",
+                "reason": "Neither transition has a decision guard."
+            }
+        ],
+        "overall": "compatible"
+    },
+    "compatibility_assessment": {
+        "verdict": "Compatible",
+        "summary": "All synchronized milestone transitions are behaviorally compatible after guard merging.",
+        "merged_transitions": 2,
+        "identical_transitions": 0,
+        "unconstrained_transitions": 3,
+        "unknown_transitions": 0,
+        "incompatible_transitions": 0
+    }
+}

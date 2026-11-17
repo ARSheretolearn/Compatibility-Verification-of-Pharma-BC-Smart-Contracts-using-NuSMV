@@ -1,0 +1,21 @@
+{
+  "variables": [
+    {
+      "fsm1_variable": "qualityScore",
+      "fsm2_variable": "qualityRating",
+      "type": "integer"
+    },
+
+    {
+      "fsm1_variable": "batchID",
+      "fsm2_variable": "lotNumber",
+      "type": "string"
+    },
+
+    {
+      "fsm1_variable": "expiryDate",
+      "fsm2_variable": "expirationDate",
+      "type": "date"
+    }
+  ]
+}

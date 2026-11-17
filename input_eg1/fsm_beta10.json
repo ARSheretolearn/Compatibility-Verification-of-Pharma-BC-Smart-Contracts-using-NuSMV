@@ -1,0 +1,78 @@
+{
+  "name": "WarehouseBeta",
+
+  "variables": {
+    "temperature": {
+      "type": "integer",
+      "domain": [0, 40]
+    },
+    "lotNumber": {
+      "type": "string"
+    },
+    "expirationDate": {
+      "type": "date"
+    }
+  },
+
+  "initial_state": "Initiated",
+
+  "states": [
+    "Initiated",
+    "MedDetailsCheck",
+    "StorageValidated",
+    "DispatchAuthorized",
+    "DispatchRejected",
+    "Shipping",
+    "ShippingInProgress",
+    "Received"
+  ],
+
+  "transitions": [
+    {
+      "from": "Initiated",
+      "to": "MedDetailsCheck"
+    },
+    {
+      "from": "MedDetailsCheck",
+      "to": "StorageValidated"
+    },
+
+    {
+      "from": "StorageValidated",
+      "to": "DispatchAuthorized",
+
+      "guard": {
+        "variable": "temperature",
+        "operator": "between",
+        "min": 15,
+        "max": 25
+      }
+    },
+
+    {
+      "from": "StorageValidated",
+      "to": "DispatchRejected",
+
+      "guard": {
+        "variable": "temperature",
+        "operator": "outside",
+        "min": 15,
+        "max": 25
+      }
+    },
+
+    {
+      "from": "DispatchAuthorized",
+      "to": "Shipping"
+    },
+    {
+      "from": "Shipping",
+      "to": "ShippingInProgress"
+    },
+
+    {
+      "from": "ShippingInProgress",
+      "to": "Received"
+    }
+  ]
+}

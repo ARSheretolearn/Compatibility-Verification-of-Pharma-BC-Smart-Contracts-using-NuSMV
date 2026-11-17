@@ -1,0 +1,72 @@
+{
+  "name": "DistributorAlpha",
+
+  "variables": {
+    "qualityScore": {
+      "type": "integer",
+      "domain": [0, 100]
+    },
+    "batchID": {
+      "type": "string"
+    },
+    "expiryDate": {
+      "type": "date"
+    }
+  },
+
+  "initial_state": "Created",
+
+  "states": [
+    "Created",
+    "DetailsCheck",
+    "QualityChecked",
+    "ShipmentApproved",
+    "ShipmentRejected",
+    "TransportStarted",
+    "Delivered"
+  ],
+
+  "transitions": [
+    {
+      "from": "Created",
+      "to": "DetailsCheck"
+    },
+    {
+        "from": "DetailsCheck",
+        "to": "QualityChecked"
+    },
+    
+
+    {
+      "from": "QualityChecked",
+      "to": "ShipmentApproved",
+
+      "guard": {
+        "variable": "qualityScore",
+        "operator": "greater_equal",
+        "value": 85
+      }
+    },
+
+    {
+      "from": "QualityChecked",
+      "to": "ShipmentRejected",
+
+      "guard": {
+        "variable": "qualityScore",
+        "operator": "less",
+        "value": 85
+      }
+    },
+
+    {
+      "from": "ShipmentApproved",
+      "to": "TransportStarted"
+    },
+
+    {
+      "from": "TransportStarted",
+      "to": "Delivered"
+    }
+  ]
+}

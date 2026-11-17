@@ -1,0 +1,46 @@
+{
+    "conflicts": [
+        {
+            "conflict_id": "CC001",
+            "rule_id": "SYNC_2",
+            "category": "Synchronization",
+            "conflict_type": "Workflow Synchronization Conflict",
+            "severity": "High",
+            "root_cause": "Expected the workflow to eventually reach 'ShipmentApproved/DispatchAuthorized', but the execution instead followed the path to 'ShipmentRejected/DispatchRejected', indicating that the synchronized behaviour could not be preserved.",
+            "affected_states": [
+                "Created / Initiated",
+                "TemperatureChecked / StorageValidated",
+                "ShipmentRejected / DispatchRejected"
+            ],
+            "execution_trace": [
+                "Created_Initiated",
+                "TemperatureChecked_StorageValidated",
+                "ShipmentRejected_DispatchRejected"
+            ],
+            "recommendation": "Align workflow transitions between interacting smart contracts."
+        },
+        {
+            "conflict_id": "CC002",
+            "rule_id": "SYNC_3",
+            "category": "Synchronization",
+            "conflict_type": "Workflow Synchronization Conflict",
+            "severity": "High",
+            "root_cause": "Expected the workflow to eventually reach 'ShipmentRejected/DispatchRejected', but the execution instead followed the path to 'Delivered/Received', indicating that the synchronized behaviour could not be preserved.",
+            "affected_states": [
+                "Created / Initiated",
+                "TemperatureChecked / StorageValidated",
+                "ShipmentApproved / DispatchAuthorized",
+                "TransportStarted / Shipping",
+                "Delivered / Received"
+            ],
+            "execution_trace": [
+                "Created_Initiated",
+                "TemperatureChecked_StorageValidated",
+                "ShipmentApproved_DispatchAuthorized",
+                "TransportStarted_Shipping",
+                "Delivered_Received"
+            ],
+            "recommendation": "Align workflow transitions between interacting smart contracts."
+        }
+    ]
+}

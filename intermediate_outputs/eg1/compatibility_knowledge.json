@@ -1,0 +1,236 @@
+{
+    "workflow_analysis": [
+        {
+            "state": "('TransportStarted', 'Shipping')",
+            "fsm1_state": "TransportStarted",
+            "fsm2_state": "Shipping",
+            "incoming": 1,
+            "outgoing": 1,
+            "initial": false,
+            "terminal": false
+        },
+        {
+            "state": "('TemperatureChecked', 'StorageValidated')",
+            "fsm1_state": "TemperatureChecked",
+            "fsm2_state": "StorageValidated",
+            "incoming": 1,
+            "outgoing": 2,
+            "initial": false,
+            "terminal": false
+        },
+        {
+            "state": "('ShipmentApproved', 'DispatchAuthorized')",
+            "fsm1_state": "ShipmentApproved",
+            "fsm2_state": "DispatchAuthorized",
+            "incoming": 1,
+            "outgoing": 1,
+            "initial": false,
+            "terminal": false
+        },
+        {
+            "state": "('Created', 'Initiated')",
+            "fsm1_state": "Created",
+            "fsm2_state": "Initiated",
+            "incoming": 0,
+            "outgoing": 1,
+            "initial": true,
+            "terminal": false
+        },
+        {
+            "state": "('ShipmentRejected', 'DispatchRejected')",
+            "fsm1_state": "ShipmentRejected",
+            "fsm2_state": "DispatchRejected",
+            "incoming": 1,
+            "outgoing": 0,
+            "initial": false,
+            "terminal": true
+        },
+        {
+            "state": "('Delivered', 'Received')",
+            "fsm1_state": "Delivered",
+            "fsm2_state": "Received",
+            "incoming": 1,
+            "outgoing": 0,
+            "initial": false,
+            "terminal": true
+        }
+    ],
+    "transition_analysis": [
+        {
+            "transition_id": "T1",
+            "from": "('Created', 'Initiated')",
+            "to": "('TemperatureChecked', 'StorageValidated')",
+            "fsm1_transition": {
+                "from": "Created",
+                "to": "TemperatureChecked",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "Initiated",
+                "to": "StorageValidated",
+                "guard": null
+            },
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null,
+            "reason": "Neither transition has a decision guard."
+        },
+        {
+            "transition_id": "T2",
+            "from": "('TemperatureChecked', 'StorageValidated')",
+            "to": "('ShipmentApproved', 'DispatchAuthorized')",
+            "fsm1_transition": {
+                "from": "TemperatureChecked",
+                "to": "ShipmentApproved",
+                "guard": {
+                    "variable": "temp",
+                    "operator": "between",
+                    "min": 2,
+                    "max": 8
+                }
+            },
+            "fsm2_transition": {
+                "from": "StorageValidated",
+                "to": "DispatchAuthorized",
+                "guard": {
+                    "variable": "temperature",
+                    "operator": "between",
+                    "min": 15,
+                    "max": 25
+                }
+            },
+            "transition_type": "decision",
+            "relationship": "unknown",
+            "requires_merge": false,
+            "merged_guard": null,
+            "reason": "Unsupported guard combination."
+        },
+        {
+            "transition_id": "T3",
+            "from": "('TemperatureChecked', 'StorageValidated')",
+            "to": "('ShipmentRejected', 'DispatchRejected')",
+            "fsm1_transition": {
+                "from": "TemperatureChecked",
+                "to": "ShipmentRejected",
+                "guard": {
+                    "variable": "temp",
+                    "operator": "outside",
+                    "min": 2,
+                    "max": 8
+                }
+            },
+            "fsm2_transition": {
+                "from": "StorageValidated",
+                "to": "DispatchRejected",
+                "guard": {
+                    "variable": "temperature",
+                    "operator": "outside",
+                    "min": 15,
+                    "max": 25
+                }
+            },
+            "transition_type": "decision",
+            "relationship": "unknown",
+            "requires_merge": false,
+            "merged_guard": null,
+            "reason": "Unsupported guard combination."
+        },
+        {
+            "transition_id": "T4",
+            "from": "('ShipmentApproved', 'DispatchAuthorized')",
+            "to": "('TransportStarted', 'Shipping')",
+            "fsm1_transition": {
+                "from": "ShipmentApproved",
+                "to": "TransportStarted",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "DispatchAuthorized",
+                "to": "Shipping",
+                "guard": null
+            },
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null,
+            "reason": "Neither transition has a decision guard."
+        },
+        {
+            "transition_id": "T5",
+            "from": "('TransportStarted', 'Shipping')",
+            "to": "('Delivered', 'Received')",
+            "fsm1_transition": {
+                "from": "TransportStarted",
+                "to": "Delivered",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "Shipping",
+                "to": "Received",
+                "guard": null
+            },
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null,
+            "reason": "Neither transition has a decision guard."
+        }
+    ],
+    "milestone_observations": [
+        "There exists an intermediate state 'InfoCheck' in FSM1 between ('Created', 'Initiated') and ('TemperatureChecked', 'StorageValidated').",
+        "There exists an intermediate state 'MedDetailsCheck' in FSM2 between ('Created', 'Initiated') and ('TemperatureChecked', 'StorageValidated').",
+        "There exists an intermediate state 'TransportInProgress' in FSM1 between ('TransportStarted', 'Shipping') and ('Delivered', 'Received').",
+        "There exists an intermediate state 'ShippingInProgress' in FSM2 between ('TransportStarted', 'Shipping') and ('Delivered', 'Received')."
+    ],
+    "synchronization_analysis": {
+        "total_transitions": 5,
+        "compatible_with_merge": 0,
+        "identical": 0,
+        "unconstrained": 3,
+        "incompatible": 0,
+        "unknown": 2,
+        "details": [
+            {
+                "from": "('Created', 'Initiated')",
+                "to": "('TemperatureChecked', 'StorageValidated')",
+                "relationship": "unconstrained",
+                "reason": "Neither transition has a decision guard."
+            },
+            {
+                "from": "('TemperatureChecked', 'StorageValidated')",
+                "to": "('ShipmentApproved', 'DispatchAuthorized')",
+                "relationship": "unknown",
+                "reason": "Unsupported guard combination."
+            },
+            {
+                "from": "('TemperatureChecked', 'StorageValidated')",
+                "to": "('ShipmentRejected', 'DispatchRejected')",
+                "relationship": "unknown",
+                "reason": "Unsupported guard combination."
+            },
+            {
+                "from": "('ShipmentApproved', 'DispatchAuthorized')",
+                "to": "('TransportStarted', 'Shipping')",
+                "relationship": "unconstrained",
+                "reason": "Neither transition has a decision guard."
+            },
+            {
+                "from": "('TransportStarted', 'Shipping')",
+                "to": "('Delivered', 'Received')",
+                "relationship": "unconstrained",
+                "reason": "Neither transition has a decision guard."
+            }
+        ],
+        "overall": "partial"
+    },
+    "compatibility_assessment": {
+        "verdict": "Partially Compatible",
+        "summary": "Some synchronized transitions require manual review.",
+        "merged_transitions": 0,
+        "identical_transitions": 0,
+        "unconstrained_transitions": 3,
+        "unknown_transitions": 2,
+        "incompatible_transitions": 0
+    }
+}

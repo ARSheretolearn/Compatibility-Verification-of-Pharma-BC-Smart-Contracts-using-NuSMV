@@ -1,0 +1,77 @@
+{
+  "name": "DistributorAlpha",
+
+  "variables": {
+    "temp": {
+      "type": "integer",
+      "domain": [0, 40]
+    },
+    "batchID": {
+      "type": "string"
+    },
+    "expiryDate": {
+      "type": "date"
+    }
+  },
+
+  "initial_state": "Created",
+
+  "states": [
+    "Created",
+    "InfoCheck",
+    "TemperatureChecked",
+    "ShipmentApproved",
+    "ShipmentRejected",
+    "TransportStarted",
+    "TransportInProgress",
+    "Delivered"
+  ],
+
+  "transitions": [
+    {
+      "from": "Created",
+      "to": "InfoCheck"
+    },
+    {
+      "from": "InfoCheck",
+      "to": "TemperatureChecked"
+    },
+    {
+      "from": "TemperatureChecked",
+      "to": "ShipmentApproved",
+
+      "guard": {
+        "variable": "temp",
+        "operator": "between",
+        "min": 2,
+        "max": 8
+      }
+    },
+
+    {
+      "from": "TemperatureChecked",
+      "to": "ShipmentRejected",
+
+      "guard": {
+        "variable": "temp",
+        "operator": "outside",
+        "min": 2,
+        "max": 8
+      }
+    },
+
+    {
+      "from": "ShipmentApproved",
+      "to": "TransportStarted"
+    },
+    {
+      "from": "TransportStarted",
+      "to": "TransportInProgress"
+    },
+
+    {
+      "from": "TransportInProgress",
+      "to": "Delivered"
+    }
+  ]
+}

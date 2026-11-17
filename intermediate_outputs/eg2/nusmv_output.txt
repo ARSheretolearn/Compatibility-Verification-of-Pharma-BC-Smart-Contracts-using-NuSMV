@@ -1,0 +1,10 @@
+-- specification AG (EX TRUE)  is true
+-- specification AG (global_state = Created_Initiated -> AF global_state = QualityChecked_InspectionValidated)  is true
+-- specification AG ((global_state = QualityChecked_InspectionValidated & qualityScore >= 85) -> AF global_state = ShipmentApproved_DispatchAuthorized)  is true
+-- specification AG ((global_state = QualityChecked_InspectionValidated & qualityScore < 85) -> AF global_state = ShipmentRejected_DispatchRejected)  is true
+-- specification AG (global_state = ShipmentApproved_DispatchAuthorized -> AF global_state = TransportStarted_Shipping)  is true
+-- specification AG (global_state = TransportStarted_Shipping -> AF global_state = Delivered_Received)  is true
+-- specification AG ((global_state = QualityChecked_InspectionValidated & qualityScore >= 85) -> AX global_state = ShipmentApproved_DispatchAuthorized)  is true
+-- specification AG ((global_state = QualityChecked_InspectionValidated & qualityScore < 85) -> AX global_state = ShipmentRejected_DispatchRejected)  is true
+-- specification AG (EF (global_state = ShipmentRejected_DispatchRejected | global_state = Delivered_Received))  is true
+-- specification AG (EF (global_state = ShipmentRejected_DispatchRejected | global_state = Delivered_Received))  is true

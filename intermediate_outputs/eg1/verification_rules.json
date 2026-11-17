@@ -1,0 +1,103 @@
+{
+    "metadata": {
+        "generated_from": "compatibility_knowledge",
+        "version": "3.0"
+    },
+    "synchronization_rules": [
+        {
+            "rule_id": "SYNC_1",
+            "type": "synchronization",
+            "transition_id": "T1",
+            "source": "('Created', 'Initiated')",
+            "target": "('TemperatureChecked', 'StorageValidated')",
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null
+        },
+        {
+            "rule_id": "SYNC_2",
+            "type": "synchronization",
+            "transition_id": "T2",
+            "source": "('TemperatureChecked', 'StorageValidated')",
+            "target": "('ShipmentApproved', 'DispatchAuthorized')",
+            "transition_type": "decision",
+            "relationship": "unknown",
+            "requires_merge": false,
+            "merged_guard": null
+        },
+        {
+            "rule_id": "SYNC_3",
+            "type": "synchronization",
+            "transition_id": "T3",
+            "source": "('TemperatureChecked', 'StorageValidated')",
+            "target": "('ShipmentRejected', 'DispatchRejected')",
+            "transition_type": "decision",
+            "relationship": "unknown",
+            "requires_merge": false,
+            "merged_guard": null
+        },
+        {
+            "rule_id": "SYNC_4",
+            "type": "synchronization",
+            "transition_id": "T4",
+            "source": "('ShipmentApproved', 'DispatchAuthorized')",
+            "target": "('TransportStarted', 'Shipping')",
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null
+        },
+        {
+            "rule_id": "SYNC_5",
+            "type": "synchronization",
+            "transition_id": "T5",
+            "source": "('TransportStarted', 'Shipping')",
+            "target": "('Delivered', 'Received')",
+            "transition_type": "workflow",
+            "relationship": "unconstrained",
+            "requires_merge": false,
+            "merged_guard": null
+        }
+    ],
+    "consistency_rules": [],
+    "reachability_rules": [
+        {
+            "rule_id": "REACH_1",
+            "type": "reachability",
+            "target_state": "('ShipmentRejected', 'DispatchRejected')",
+            "fsm1_state": "ShipmentRejected",
+            "fsm2_state": "DispatchRejected"
+        },
+        {
+            "rule_id": "REACH_2",
+            "type": "reachability",
+            "target_state": "('Delivered', 'Received')",
+            "fsm1_state": "Delivered",
+            "fsm2_state": "Received"
+        }
+    ],
+    "deadlock_rules": [
+        {
+            "rule_id": "DEADLOCK_1",
+            "type": "deadlock_successor",
+            "description": "Every reachable state must have at least one successor."
+        },
+        {
+            "rule_id": "DEADLOCK_2",
+            "type": "deadlock_terminal",
+            "terminal_states": [
+                "('ShipmentRejected', 'DispatchRejected')",
+                "('Delivered', 'Received')"
+            ],
+            "description": "A compatible terminal state must always remain reachable."
+        }
+    ],
+    "statistics": {
+        "total_rules": 9,
+        "synchronization_rules": 5,
+        "consistency_rules": 0,
+        "reachability_rules": 2,
+        "deadlock_rules": 2
+    }
+}

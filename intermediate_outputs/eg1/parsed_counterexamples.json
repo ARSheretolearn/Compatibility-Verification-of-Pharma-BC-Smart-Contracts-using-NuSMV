@@ -1,0 +1,152 @@
+{
+    "failed_properties": [
+        {
+            "rule_id": "SYNC_2",
+            "category": "synchronization",
+            "property_type": "synchronization",
+            "logic": "CTL",
+            "formula": "AG (global_state = TemperatureChecked_StorageValidated -> AF global_state = ShipmentApproved_DispatchAuthorized)",
+            "status": "FAILED",
+            "trace": [
+                "Created_Initiated",
+                "TemperatureChecked_StorageValidated",
+                "ShipmentRejected_DispatchRejected"
+            ],
+            "states": [
+                {
+                    "fsm1_state": "Created",
+                    "fsm2_state": "Initiated"
+                },
+                {
+                    "fsm1_state": "TemperatureChecked",
+                    "fsm2_state": "StorageValidated"
+                },
+                {
+                    "fsm1_state": "ShipmentRejected",
+                    "fsm2_state": "DispatchRejected"
+                }
+            ],
+            "variables": {
+                "TemperatureChecked": [
+                    "FALSE",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "StorageValidated": [
+                    "FALSE",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "ShipmentRejected": [
+                    "FALSE",
+                    "TRUE"
+                ],
+                "Initiated": [
+                    "TRUE",
+                    "FALSE"
+                ],
+                "DispatchRejected": [
+                    "FALSE",
+                    "TRUE"
+                ],
+                "Created": [
+                    "TRUE",
+                    "FALSE"
+                ]
+            },
+            "violated_condition": {
+                "fsm1_state": "ShipmentRejected",
+                "fsm2_state": "DispatchRejected"
+            }
+        },
+        {
+            "rule_id": "SYNC_3",
+            "category": "synchronization",
+            "property_type": "synchronization",
+            "logic": "CTL",
+            "formula": "AG (global_state = TemperatureChecked_StorageValidated -> AF global_state = ShipmentRejected_DispatchRejected)",
+            "status": "FAILED",
+            "trace": [
+                "Created_Initiated",
+                "TemperatureChecked_StorageValidated",
+                "ShipmentApproved_DispatchAuthorized",
+                "TransportStarted_Shipping",
+                "Delivered_Received"
+            ],
+            "states": [
+                {
+                    "fsm1_state": "Created",
+                    "fsm2_state": "Initiated"
+                },
+                {
+                    "fsm1_state": "TemperatureChecked",
+                    "fsm2_state": "StorageValidated"
+                },
+                {
+                    "fsm1_state": "ShipmentApproved",
+                    "fsm2_state": "DispatchAuthorized"
+                },
+                {
+                    "fsm1_state": "TransportStarted",
+                    "fsm2_state": "Shipping"
+                },
+                {
+                    "fsm1_state": "Delivered",
+                    "fsm2_state": "Received"
+                }
+            ],
+            "variables": {
+                "TransportStarted": [
+                    "FALSE",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "TemperatureChecked": [
+                    "FALSE",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "StorageValidated": [
+                    "FALSE",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "Shipping": [
+                    "FALSE",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "ShipmentApproved": [
+                    "FALSE",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "Received": [
+                    "FALSE",
+                    "TRUE"
+                ],
+                "Initiated": [
+                    "TRUE",
+                    "FALSE"
+                ],
+                "DispatchAuthorized": [
+                    "FALSE",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "Delivered": [
+                    "FALSE",
+                    "TRUE"
+                ],
+                "Created": [
+                    "TRUE",
+                    "FALSE"
+                ]
+            },
+            "violated_condition": {
+                "fsm1_state": "Delivered",
+                "fsm2_state": "Received"
+            }
+        }
+    ]
+}

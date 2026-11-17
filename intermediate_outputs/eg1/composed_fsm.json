@@ -1,0 +1,187 @@
+{
+    "initial_state": "('Created', 'Initiated')",
+    "states": [
+        "('TransportStarted', 'Shipping')",
+        "('TemperatureChecked', 'StorageValidated')",
+        "('ShipmentApproved', 'DispatchAuthorized')",
+        "('Created', 'Initiated')",
+        "('ShipmentRejected', 'DispatchRejected')",
+        "('Delivered', 'Received')"
+    ],
+    "transitions": [
+        {
+            "id": "T1",
+            "from": "('Created', 'Initiated')",
+            "to": "('TemperatureChecked', 'StorageValidated')",
+            "fsm1_transition": {
+                "from": "Created",
+                "to": "TemperatureChecked",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "Initiated",
+                "to": "StorageValidated",
+                "guard": null
+            },
+            "fsm1_intermediate_states": [
+                "InfoCheck"
+            ],
+            "fsm2_intermediate_states": [
+                "MedDetailsCheck"
+            ]
+        },
+        {
+            "id": "T2",
+            "from": "('TemperatureChecked', 'StorageValidated')",
+            "to": "('ShipmentApproved', 'DispatchAuthorized')",
+            "fsm1_transition": {
+                "from": "TemperatureChecked",
+                "to": "ShipmentApproved",
+                "guard": {
+                    "variable": "temp",
+                    "operator": "between",
+                    "min": 2,
+                    "max": 8
+                }
+            },
+            "fsm2_transition": {
+                "from": "StorageValidated",
+                "to": "DispatchAuthorized",
+                "guard": {
+                    "variable": "temperature",
+                    "operator": "between",
+                    "min": 15,
+                    "max": 25
+                }
+            },
+            "fsm1_intermediate_states": [],
+            "fsm2_intermediate_states": []
+        },
+        {
+            "id": "T3",
+            "from": "('TemperatureChecked', 'StorageValidated')",
+            "to": "('ShipmentRejected', 'DispatchRejected')",
+            "fsm1_transition": {
+                "from": "TemperatureChecked",
+                "to": "ShipmentRejected",
+                "guard": {
+                    "variable": "temp",
+                    "operator": "outside",
+                    "min": 2,
+                    "max": 8
+                }
+            },
+            "fsm2_transition": {
+                "from": "StorageValidated",
+                "to": "DispatchRejected",
+                "guard": {
+                    "variable": "temperature",
+                    "operator": "outside",
+                    "min": 15,
+                    "max": 25
+                }
+            },
+            "fsm1_intermediate_states": [],
+            "fsm2_intermediate_states": []
+        },
+        {
+            "id": "T4",
+            "from": "('ShipmentApproved', 'DispatchAuthorized')",
+            "to": "('TransportStarted', 'Shipping')",
+            "fsm1_transition": {
+                "from": "ShipmentApproved",
+                "to": "TransportStarted",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "DispatchAuthorized",
+                "to": "Shipping",
+                "guard": null
+            },
+            "fsm1_intermediate_states": [],
+            "fsm2_intermediate_states": []
+        },
+        {
+            "id": "T5",
+            "from": "('TransportStarted', 'Shipping')",
+            "to": "('Delivered', 'Received')",
+            "fsm1_transition": {
+                "from": "TransportStarted",
+                "to": "Delivered",
+                "guard": null
+            },
+            "fsm2_transition": {
+                "from": "Shipping",
+                "to": "Received",
+                "guard": null
+            },
+            "fsm1_intermediate_states": [
+                "TransportInProgress"
+            ],
+            "fsm2_intermediate_states": [
+                "ShippingInProgress"
+            ]
+        }
+    ],
+    "variable_mapping": {
+        "variables": [
+            {
+                "fsm1_variable": "temp",
+                "fsm2_variable": "temperature",
+                "type": "integer"
+            },
+            {
+                "fsm1_variable": "batchID",
+                "fsm2_variable": "lotNumber",
+                "type": "string"
+            },
+            {
+                "fsm1_variable": "expiryDate",
+                "fsm2_variable": "expirationDate",
+                "type": "date"
+            }
+        ]
+    },
+    "state_dictionary": {
+        "DistributorAlpha": {
+            "TransportStarted": [
+                "TransportStarted_Shipping"
+            ],
+            "TemperatureChecked": [
+                "TemperatureChecked_StorageValidated"
+            ],
+            "ShipmentApproved": [
+                "ShipmentApproved_DispatchAuthorized"
+            ],
+            "Created": [
+                "Created_Initiated"
+            ],
+            "ShipmentRejected": [
+                "ShipmentRejected_DispatchRejected"
+            ],
+            "Delivered": [
+                "Delivered_Received"
+            ]
+        },
+        "WarehouseBeta": {
+            "Shipping": [
+                "TransportStarted_Shipping"
+            ],
+            "StorageValidated": [
+                "TemperatureChecked_StorageValidated"
+            ],
+            "DispatchAuthorized": [
+                "ShipmentApproved_DispatchAuthorized"
+            ],
+            "Initiated": [
+                "Created_Initiated"
+            ],
+            "DispatchRejected": [
+                "ShipmentRejected_DispatchRejected"
+            ],
+            "Received": [
+                "Delivered_Received"
+            ]
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+  "interactions": [
+    {
+      "fsm1_state": "Created",
+      "fsm2_state": "Initiated",
+      "level": 0
+    },
+
+    {
+      "fsm1_state": "QualityChecked",
+      "fsm2_state": "InspectionValidated",
+      "level": 1
+    },
+
+    {
+      "fsm1_state": "ShipmentApproved",
+      "fsm2_state": "DispatchAuthorized",
+      "level": 2
+    },
+
+    {
+      "fsm1_state": "ShipmentRejected",
+      "fsm2_state": "DispatchRejected",
+      "level": 2
+    },
+
+    {
+      "fsm1_state": "TransportStarted",
+      "fsm2_state": "Shipping",
+      "level": 3
+    },
+
+    {
+      "fsm1_state": "Delivered",
+      "fsm2_state": "Received",
+      "level": 4
+    }
+  ]
+}

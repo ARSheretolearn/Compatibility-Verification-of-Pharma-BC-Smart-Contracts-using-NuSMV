@@ -1,0 +1,97 @@
+MODULE main
+VAR
+    global_state : {
+        QualityChecked_InspectionValidated,
+        ShipmentRejected_DispatchRejected,
+        Created_Initiated,
+        TransportStarted_Shipping,
+        ShipmentApproved_DispatchAuthorized,
+        Delivered_Received
+    };
+    qualityScore : 0..100;
+
+
+DEFINE
+    Created :=
+        global_state = Created_Initiated;
+    Delivered :=
+        global_state = Delivered_Received;
+    DispatchAuthorized :=
+        global_state = ShipmentApproved_DispatchAuthorized;
+    DispatchRejected :=
+        global_state = ShipmentRejected_DispatchRejected;
+    Initiated :=
+        global_state = Created_Initiated;
+    InspectionValidated :=
+        global_state = QualityChecked_InspectionValidated;
+    QualityChecked :=
+        global_state = QualityChecked_InspectionValidated;
+    Received :=
+        global_state = Delivered_Received;
+    ShipmentApproved :=
+        global_state = ShipmentApproved_DispatchAuthorized;
+    ShipmentRejected :=
+        global_state = ShipmentRejected_DispatchRejected;
+    Shipping :=
+        global_state = TransportStarted_Shipping;
+    TransportStarted :=
+        global_state = TransportStarted_Shipping;
+ASSIGN
+    init(global_state) := Created_Initiated;
+    next(qualityScore) := qualityScore;
+
+    next(global_state) := case
+
+        global_state = Created_Initiated : QualityChecked_InspectionValidated;
+
+        global_state = QualityChecked_InspectionValidated & ((qualityScore >= 85)) : ShipmentApproved_DispatchAuthorized;
+        global_state = QualityChecked_InspectionValidated & ((qualityScore < 85)) : ShipmentRejected_DispatchRejected;
+
+        global_state = ShipmentApproved_DispatchAuthorized : TransportStarted_Shipping;
+
+        global_state = TransportStarted_Shipping : Delivered_Received;
+
+        TRUE : global_state;
+    esac;
+
+-- ======================================
+-- Verification Properties
+-- ======================================
+
+-- Synchronization
+
+-- SYNC_1
+CTLSPEC AG(global_state = Created_Initiated -> AF(global_state = QualityChecked_InspectionValidated));
+
+-- SYNC_2
+CTLSPEC AG((global_state = QualityChecked_InspectionValidated & (qualityScore >= 85)) -> AF(global_state = ShipmentApproved_DispatchAuthorized));
+
+-- SYNC_3
+CTLSPEC AG((global_state = QualityChecked_InspectionValidated & (qualityScore < 85)) -> AF(global_state = ShipmentRejected_DispatchRejected));
+
+-- SYNC_4
+CTLSPEC AG(global_state = ShipmentApproved_DispatchAuthorized -> AF(global_state = TransportStarted_Shipping));
+
+-- SYNC_5
+CTLSPEC AG(global_state = TransportStarted_Shipping -> AF(global_state = Delivered_Received));
+
+-- Consistency
+
+-- CONS_1
+CTLSPEC AG((global_state = QualityChecked_InspectionValidated & (qualityScore >= 85)) -> AX(global_state = ShipmentApproved_DispatchAuthorized));
+
+-- CONS_2
+CTLSPEC AG((global_state = QualityChecked_InspectionValidated & (qualityScore < 85)) -> AX(global_state = ShipmentRejected_DispatchRejected));
+
+-- Reachability
+
+-- REACH_TERMINAL
+CTLSPEC AG(EF(global_state = ShipmentRejected_DispatchRejected | global_state = Delivered_Received));
+
+-- Deadlock
+
+-- DEADLOCK_SUCCESSOR
+CTLSPEC AG(EX TRUE);
+
+-- DEADLOCK_TERMINAL
+CTLSPEC AG(EF(global_state = ShipmentRejected_DispatchRejected | global_state = Delivered_Received));
